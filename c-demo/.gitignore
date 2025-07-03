@@ -1,4 +1,5 @@
 *.o
 ex_ortho
 ex_svd
+ex_xtx
 .DS_Store
