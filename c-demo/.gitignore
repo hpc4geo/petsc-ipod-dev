@@ -1,3 +1,4 @@
 *.o
 ex_ortho
 ex_svd
+.DS_Store

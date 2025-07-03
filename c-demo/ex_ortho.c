@@ -727,7 +727,7 @@ PetscErrorCode _MatQRBlockMGS_Dense_v2(Mat Q,Mat R)
   PetscCall(MatFactCreateCompat(Qhat, NULL, &That));
 
   // re-use rowidx, colidx for all iterations
-  mlocal = QM; // fix-me
+  mlocal = QN; // fix-me - this is an over-estimate
   PetscCall(PetscCalloc1(mlocal,&rowidx));
   PetscCall(PetscCalloc1(QN,&colidx));
 
