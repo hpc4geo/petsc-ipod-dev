@@ -571,7 +571,6 @@ PetscErrorCode _MatQRBlockMGS_Dense_v2_SEQ(Mat Q,Mat R)
       PetscCall(MatDenseRestoreArray(R,&_R));
     }
 
-
     // gk = np.matmul(Qhat.T, qk)
     // gk = -That @ gk
     PetscCall(MatMultTranspose(Qhat,qk,hk));
@@ -598,13 +597,8 @@ PetscErrorCode _MatQRBlockMGS_Dense_v2_SEQ(Mat Q,Mat R)
       PetscCall(MatDenseRestoreArray(T,&_T));
     }
 
-
-
-
     PetscCall(VecDestroy(&hk));
     PetscCall(VecDestroy(&hk2));
-
-
 
     if (k == QN-1) { break; }
 
@@ -645,8 +639,6 @@ PetscErrorCode _MatQRBlockMGS_Dense_v2_SEQ(Mat Q,Mat R)
 
   }
 
-
-
   PetscCall(MatDestroy(&Rhat));
   PetscCall(MatDestroy(&That));
 
@@ -658,7 +650,6 @@ PetscErrorCode _MatQRBlockMGS_Dense_v2_SEQ(Mat Q,Mat R)
 
   PetscFunctionReturn(PETSC_SUCCESS);
 }
-
 
 PetscErrorCode _MatQRBlockMGS_Dense_v2(Mat Q,Mat R)
 {
@@ -689,7 +680,6 @@ PetscErrorCode _MatQRBlockMGS_Dense_v2(Mat Q,Mat R)
 
   PetscCall(MatGetSize(Q,&QM,&QN));
   PetscCall(MatGetLocalSize(Q,&Qm,&Qn));
-
 
   PetscCall(MatDenseGetArray(Q,&_Q));
   PetscCall(MatCreateDense(comm, Qm, PETSC_DECIDE, QM, 1, _Q, &Qhat));
@@ -762,8 +752,6 @@ PetscErrorCode _MatQRBlockMGS_Dense_v2(Mat Q,Mat R)
   PetscPrintf(comm,"Rhat_");
   MatView(Rhat,PETSC_VIEWER_STDOUT_(comm));
 
-
-
   for (k=1; k<QN; k++) {
     Vec hk,hk2;
 
@@ -814,7 +802,6 @@ PetscErrorCode _MatQRBlockMGS_Dense_v2(Mat Q,Mat R)
     PetscCall(MatAssemblyBegin(R,MAT_FINAL_ASSEMBLY));
     PetscCall(MatAssemblyEnd(R,MAT_FINAL_ASSEMBLY));
 
-
     // gk = np.matmul(Qhat.T, qk)
     // gk = -That @ gk
     PetscCall(MatMultTranspose(Qhat,qk,hk));
@@ -842,8 +829,6 @@ PetscErrorCode _MatQRBlockMGS_Dense_v2(Mat Q,Mat R)
     PetscCall(VecDestroy(&hk));
     PetscCall(VecDestroy(&hk2));
 
-
-
     if (k == QN-1) { break; }
 
     // update views
@@ -854,7 +839,6 @@ PetscErrorCode _MatQRBlockMGS_Dense_v2(Mat Q,Mat R)
     PetscCall(MatDenseGetArray(Q,&_Q));
     PetscCall(MatCreateDense(comm, Qm, PETSC_DECIDE, QM, k+1, _Q, &Qhat));
     PetscCall(MatDenseRestoreArray(Q,&_Q));
-
 
     PetscCall(MatPull(Qhat,R,&Rhat));
     PetscCall(MatPull(Qhat,T,&That));
@@ -901,8 +885,6 @@ PetscErrorCode _MatQRBlockMGS_Dense_v2(Mat Q,Mat R)
     #endif
   }
 
-
-
   PetscCall(MatDestroy(&Rhat));
   PetscCall(PetscFree(rowidx));
   PetscCall(PetscFree(colidx));
@@ -917,17 +899,16 @@ PetscErrorCode _MatQRBlockMGS_Dense_v2(Mat Q,Mat R)
   PetscFunctionReturn(PETSC_SUCCESS);
 }
 
-
 PetscErrorCode MatQRBlockMGS(Mat A,Mat *Q,Mat *R)
 {
   PetscBool isdense[] = {PETSC_FALSE,PETSC_FALSE};
+
   PetscFunctionBeginUser;
     {
       PetscCall(PetscObjectTypeCompare((PetscObject)A,MATSEQDENSE,&isdense[0]));
       PetscCall(PetscObjectTypeCompare((PetscObject)A,MATMPIDENSE,&isdense[1]));
       if (!isdense[0] && !isdense[1]) SETERRQ(PetscObjectComm((PetscObject)A),PETSC_ERR_SUP,"Only valid for MatType MATSEQDENSE or MATMPIDENSE");
     }
-
 
   PetscCall(MatFactCreateCompat(A, NULL, R));
   if (isdense[0]) {
@@ -1078,7 +1059,6 @@ PetscErrorCode test1_qr_mpi(void)
   MPI_Comm comm = PETSC_COMM_WORLD;
   PetscMPIInt commrank;
 
-
   PetscFunctionBeginUser;
   PetscPrintf(PETSC_COMM_WORLD,"%s\n",__func__);
   PetscCall(PetscOptionsGetInt(NULL,NULL,"-m",&M,NULL));
@@ -1144,7 +1124,6 @@ PetscErrorCode test1_qrblock_mpi(void)
   MPI_Comm comm = PETSC_COMM_WORLD;
   PetscMPIInt commrank;
 
-
   PetscFunctionBeginUser;
   PetscPrintf(PETSC_COMM_WORLD,"%s\n",__func__);
   PetscCall(PetscOptionsGetInt(NULL,NULL,"-m",&M,NULL));
@@ -1206,6 +1185,7 @@ PetscErrorCode test1_qrblock_mpi(void)
 int main(int argc, char **args)
 {
   PetscInt test_idx = 0;
+
   PetscFunctionBeginUser;
   PetscCall(PetscInitialize(&argc, &args, NULL, help));
 
