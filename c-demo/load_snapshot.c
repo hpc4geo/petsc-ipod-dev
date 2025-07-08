@@ -19,8 +19,10 @@ PetscErrorCode MatDenseCreateSnapshotFromH5(
   PetscScalar *_B;
   PetscMPIInt commsize;
   PetscBool has_attr_dim = PETSC_FALSE;
+  PetscLogDouble t0,t1;
 
   PetscFunctionBeginUser;
+  PetscPrintf(comm,"Loading %s\n",filename);
   PetscCall(PetscViewerHDF5Open(comm,filename,FILE_MODE_READ,&viewer));
 
   PetscCall(PetscViewerHDF5HasAttribute(viewer, "/", attr_dim_name, &has_attr_dim));
@@ -33,6 +35,7 @@ PetscErrorCode MatDenseCreateSnapshotFromH5(
     N = val[1];
   }
 
+  PetscTime(&t0);
   j = 0;
   MPI_Comm_size(comm,&commsize);
   PetscCall(VecCreate(comm,&x));
@@ -73,6 +76,8 @@ PetscErrorCode MatDenseCreateSnapshotFromH5(
     PetscCall(VecRestoreArray(x,&_vals));
   }
   PetscCall(MatDenseRestoreArray(B,&_B));
+  PetscTime(&t1);
+  PetscPrintf(comm,"[MatDenseCreateSnapshotFromH5] %1.6ld x %1.6ld %1.6e (s)\n",(long int)M,(long int)N,(double)(t1-t0));
 
   PetscCall(VecDestroy(&x));
   PetscCall(PetscViewerDestroy(&viewer));
